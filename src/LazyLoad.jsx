@@ -1,11 +1,11 @@
-import React, { Children, Component } from 'react';
-import PropTypes from 'prop-types';
-import { findDOMNode } from 'react-dom';
-import { add, remove } from 'eventlistener';
-import debounce from 'lodash.debounce';
-import throttle from 'lodash.throttle';
-import parentScroll from './utils/parentScroll';
-import inViewport from './utils/inViewport';
+import React, { Children, Component } from "react";
+import PropTypes from "prop-types";
+import { findDOMNode } from "react-dom";
+import { add, remove } from "eventlistener";
+import debounce from "lodash.debounce";
+import throttle from "lodash.throttle";
+import parentScroll from "./utils/parentScroll";
+import inViewport from "./utils/inViewport";
 
 export default class LazyLoad extends Component {
   constructor(props) {
@@ -34,8 +34,8 @@ export default class LazyLoad extends Component {
       this.lazyLoadHandler.flush();
     }
 
-    add(window, 'resize', this.lazyLoadHandler);
-    add(eventNode, 'scroll', this.lazyLoadHandler);
+    add(window, "resize", this.lazyLoadHandler);
+    add(eventNode, "scroll", this.lazyLoadHandler);
   }
 
   componentWillReceiveProps() {
@@ -63,8 +63,14 @@ export default class LazyLoad extends Component {
 
   getOffset() {
     const {
-      offset, offsetVertical, offsetHorizontal,
-      offsetTop, offsetBottom, offsetLeft, offsetRight, threshold,
+      offset,
+      offsetVertical,
+      offsetHorizontal,
+      offsetTop,
+      offsetBottom,
+      offsetLeft,
+      offsetRight,
+      threshold
     } = this.props;
 
     const _offsetAll = threshold || offset;
@@ -75,7 +81,7 @@ export default class LazyLoad extends Component {
       top: offsetTop || _offsetVertical,
       bottom: offsetBottom || _offsetVertical,
       left: offsetLeft || _offsetHorizontal,
-      right: offsetRight || _offsetHorizontal,
+      right: offsetRight || _offsetHorizontal
     };
   }
 
@@ -102,25 +108,28 @@ export default class LazyLoad extends Component {
   detachListeners() {
     const eventNode = this.getEventNode();
 
-    remove(window, 'resize', this.lazyLoadHandler);
-    remove(eventNode, 'scroll', this.lazyLoadHandler);
+    remove(window, "resize", this.lazyLoadHandler);
+    remove(eventNode, "scroll", this.lazyLoadHandler);
   }
 
   render() {
-    const { children, className, height, width } = this.props;
+    const { children, className, height, width, style } = this.props;
     const { visible } = this.state;
 
-    const elStyles = { height, width };
-    const elClasses = (
-      'LazyLoad' +
-      (visible ? ' is-visible' : '') +
-      (className ? ` ${className}` : '')
-    );
+    const elStyles = { height, width, ...style };
+    const elClasses =
+      "LazyLoad" +
+      (visible ? " is-visible" : "") +
+      (className ? ` ${className}` : "");
 
-    return React.createElement(this.props.elementType, {
-      className: elClasses,
-      style: elStyles,
-    }, visible && Children.only(children));
+    return React.createElement(
+      this.props.elementType,
+      {
+        className: elClasses,
+        style: elStyles
+      },
+      visible && Children.only(children)
+    );
   }
 }
 
@@ -129,10 +138,7 @@ LazyLoad.propTypes = {
   className: PropTypes.string,
   debounce: PropTypes.bool,
   elementType: PropTypes.string,
-  height: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
+  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   offset: PropTypes.number,
   offsetBottom: PropTypes.number,
   offsetHorizontal: PropTypes.number,
@@ -142,15 +148,13 @@ LazyLoad.propTypes = {
   offsetVertical: PropTypes.number,
   threshold: PropTypes.number,
   throttle: PropTypes.number,
-  width: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
-  onContentVisible: PropTypes.func,
+  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  style: PropTypes.object,
+  onContentVisible: PropTypes.func
 };
 
 LazyLoad.defaultProps = {
-  elementType: 'div',
+  elementType: "div",
   debounce: true,
   offset: 0,
   offsetBottom: 0,
@@ -160,4 +164,5 @@ LazyLoad.defaultProps = {
   offsetTop: 0,
   offsetVertical: 0,
   throttle: 250,
+  style: {}
 };
